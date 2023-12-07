@@ -29,3 +29,4 @@ jobs:
         with:
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           file: test.apk
+          appId: "com.example.firebase_upload_test"
