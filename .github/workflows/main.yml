@@ -26,6 +26,5 @@ jobs:
       - name: Deploy
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
         with:
-          appId: ${{secrets.FIREBASE_ANDROID_APPID}}
-          token: ${{secrets.FIREBASE_TOKEN}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           file: test.apk
