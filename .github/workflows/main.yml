@@ -1,0 +1,31 @@
+name: CI/CD
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  build_and_deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      # - uses: subosito/flutter-action@v2
+      #   with:
+      #       channel: 'stable'
+      # - run: flutter pub get
+      # - name: Build
+      #   run: |
+      #     flutter build apk --flavor newDev -t lib/main.dart
+      # - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Deploy
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
+        with:
+          appId: ${{secrets.FIREBASE_ANDROID_APPID}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          file: test.apk
