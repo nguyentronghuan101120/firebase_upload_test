@@ -42,7 +42,16 @@ jobs:
           projectNumber: 177761251370
           serviceAccount: ${{secrets.CREDENTIAL_FILE_CONTENT}}
 
-      # - name: Deploy
+      - name: Show current version
+        run: |
+          echo "Build version: ${{ steps.version.outputs.buildVersion }}"
+          echo "Build displayVersion: ${{ steps.version.outputs.displayVersion }}"
+          echo "Build flutterVersionString: ${{ steps.version.outputs.flutterVersionString }}"
+          echo "Build newBuildVersion: ${{ steps.version.outputs.newBuildVersion }}"
+          echo "Build newDisplayVersion: ${{ steps.version.outputs.newDisplayVersion }}"
+          echo "Build newFlutterVersionString: ${{ steps.version.outputs.newFlutterVersionString }}"
+
+        # - name: Deploy
       #   if: steps.check_version.outputs.exit_code == 0
       #   uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
       #   with:
@@ -50,4 +59,3 @@ jobs:
       #     file: app-release.apk
       #     groups: tester
       #     appId: ${{secrets.FIREBASE_APP_ID}}
- 
