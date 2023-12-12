@@ -1,0 +1,3 @@
+[submodule ".github/workflows/.github/workflows/firebase-appversion"]
+	path = .github/workflows/.github/workflows/firebase-appversion
+	url = https://github.com/nguyentronghuan101120/firebase_upload_test.git
