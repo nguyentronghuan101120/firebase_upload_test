@@ -36,16 +36,14 @@ jobs:
 
       - name: Check Firebase App Version
         id: check_version
-        env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
         run: |
-          # Set up Firebase project directory
-          mkdir -p $HOME/firebase
-          cd $HOME/firebase
-          echo "$FIREBASE_SERVICE_ACCOUNT" > service-account.json
+          # # Set up Firebase project directory
+          # mkdir -p $HOME/firebase
+          # cd $HOME/firebase
+          # echo "$FIREBASE_SERVICE_ACCOUNT" > service-account.json
 
           # Authenticate with Firebase using the service account
-          firebase login:ci --no-localhost --token "$(cat service-account.json)"
+          firebase login:ci --no-localhost --token "$(cat secrets.CREDENTIAL_FILE_CONTENT )"
 
           # Get the latest version from Firebase
           latest_version=$(firebase appdistribution:versions:list --format "value(version)" | head -n 1)
