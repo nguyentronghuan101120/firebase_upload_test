@@ -50,3 +50,4 @@ jobs:
       #     file: app-release.apk
       #     groups: tester
       #     appId: ${{secrets.FIREBASE_APP_ID}}
+ 
