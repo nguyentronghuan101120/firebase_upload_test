@@ -36,7 +36,7 @@ jobs:
 
       - name: Get latest app version
         id: version
-        uses: nguyentronghuan101120/get_lastest_firebase_app_version_action
+        uses: nguyentronghuan101120/get_lastest_firebase_app_version_action@master
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
           projectNumber: 177761251370
