@@ -38,8 +38,8 @@ jobs:
         id: check_version
         run: |
         
-          # Set the Firebase project using --project and --token options
-          firebase use ${{secrets.FIREBASE_APP_ID}} --token "$(firebase login:ci --no-localhost)"
+          # # Set the Firebase project using --project and --token options
+          # firebase use ${{secrets.FIREBASE_APP_ID}} --token "$(firebase login:ci --no-localhost)"
 
           # Get the latest version from Firebase
           latest_version=$(firebase appdistribution:versions:list --format "value(version)" | head -n 1)
