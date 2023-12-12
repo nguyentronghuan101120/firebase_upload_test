@@ -25,41 +25,30 @@ jobs:
         with:
           node-version: 18
 
-      # - name: Install Firebase CLI
+      # - name: Get latest app version
+      #   id: version
+      #   uses: nguyentronghuan101120/get_lastest_firebase_app_version_action@master
+      #   with:
+      #     appId: ${{secrets.FIREBASE_APP_ID}}
+      #     projectNumber: ${{secrets.PROJECT_NUMBER}}
+      #     serviceAccount: ${{secrets.CREDENTIAL_FILE_CONTENT}}
+
+      # - name: Show current version
       #   run: |
-      #     npm install -g firebase-tools
+      #     echo "Build version: ${{ steps.version.outputs.buildVersion }}"
+      #     echo "Build displayVersion: ${{ steps.version.outputs.displayVersion }}"
+      #     echo "Build flutterVersionString: ${{ steps.version.outputs.flutterVersionString }}"
+      #     echo "Build newBuildVersion: ${{ steps.version.outputs.newBuildVersion }}"
+      #     echo "Build newDisplayVersion: ${{ steps.version.outputs.newDisplayVersion }}"
+      #     echo "Build newFlutterVersionString: ${{ steps.version.outputs.newFlutterVersionString }}"
 
-      # - name: Install aapt
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y android-sdk-build-tools
-
-      - name: Get latest app version
-        id: version
-        uses: nguyentronghuan101120/get_lastest_firebase_app_version_action@master
+      - uses: hkusu/apk-info-action@v1
+        id: apk-info
         with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          projectNumber: 177761251370
-          serviceAccount: ${{secrets.CREDENTIAL_FILE_CONTENT}}
-
-      - name: Show current version
-        run: |
-          echo "Build version: ${{ steps.version.outputs.buildVersion }}"
-          echo "Build displayVersion: ${{ steps.version.outputs.displayVersion }}"
-          echo "Build flutterVersionString: ${{ steps.version.outputs.flutterVersionString }}"
-          echo "Build newBuildVersion: ${{ steps.version.outputs.newBuildVersion }}"
-          echo "Build newDisplayVersion: ${{ steps.version.outputs.newDisplayVersion }}"
-          echo "Build newFlutterVersionString: ${{ steps.version.outputs.newFlutterVersionString }}"
-
-      - name: Save version information to file
-        run: echo "${{ steps.version.outputs.current_version }}" > version.txt
-
-      - name: Upload version information as an artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: version-info
-          path: version.txt
-
+          apk-path: "app-release.apk"
+      - name: Show result
+        if: always()
+        run: echo '${{ steps.apk-info.outputs.result }}'
         # - name: Deploy
       #   if: steps.check_version.outputs.exit_code == 0
       #   uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
