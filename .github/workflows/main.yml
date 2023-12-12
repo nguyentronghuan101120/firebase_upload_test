@@ -45,7 +45,7 @@ jobs:
           echo "$FIREBASE_SERVICE_ACCOUNT" > service-account.json
 
           # Authenticate with Firebase using the service account
-          firebase login:ci --interactive --no-localhost --token "$(cat service-account.json)"
+          export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase/service-account.json
 
           # Get the latest version from Firebase
           latest_version=$(firebase appdistribution:versions:list --format "value(version)" | head -n 1)
