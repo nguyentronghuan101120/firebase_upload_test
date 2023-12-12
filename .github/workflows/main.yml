@@ -27,7 +27,7 @@ jobs:
 
       - name: Get and Firebase latest app version
         id: firebaseAppVersion
-        uses: nguyentronghuan101120/get_lastest_firebase_app_version_action@master
+        uses: ./.github/actions/firebase_app_check
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
           projectNumber: ${{secrets.PROJECT_NUMBER}}
