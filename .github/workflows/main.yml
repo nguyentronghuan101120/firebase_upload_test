@@ -1,9 +1,8 @@
 name: CI/CD
-
 on:
   push:
     branches:
-      - "master"
+      - "*"
   workflow_dispatch:
 
 jobs:
@@ -13,41 +12,36 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-
-      - run: flutter pub get
-
-      - name: Build
-        run: |
-          flutter build apk --flavor newDev -t lib/main.dart
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
+      # - uses: subosito/flutter-action@v2
+      #   with:
+      #       channel: 'stable'
+      # - run: flutter pub get
+      # - name: Build
+      #   run: |
+      #     flutter build apk --flavor newDev -t lib/main.dart
 
       - name: Check Firebase App Version
         id: check_version
         run: |
           # Get the latest version from Firebase
           latest_version=$(firebase appdistribution:versions:list --app ${{secrets.FIREBASE_APP_ID}} --token "$FIREBASE_TOKEN" --format "value(version)" | head -n 1)
-          
+        
           # Get the version of the APK you are trying to deploy
           new_version=$(aapt dump badging build/app/outputs/flutter-apk/app-newdev-release.apk | awk -F"'" '/versionName/{print $2}')
 
           if [ "$latest_version" == "$new_version" ]; then
-            echo "Error: The new app version is the same as the current last app version in Firebase."
-            exit 1
+          echo "Error: The new app version is the same as the current last app version in Firebase."
+          exit 1
           fi
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
       - name: Deploy
-        if: success() # Only deploy if the version check is successful
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
         with:
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          file: build/app/outputs/flutter-apk/app-newdev-release.apk
-          groups: mula-testers
+          file: app-release.apk
+          groups: tester
           appId: ${{secrets.FIREBASE_APP_ID}}
