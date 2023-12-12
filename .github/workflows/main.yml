@@ -20,49 +20,33 @@ jobs:
       #   run: |
       #     flutter build apk --flavor newDev -t lib/main.dart
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 18
+
+      # - name: Install Firebase CLI
+      #   run: |
+      #     npm install -g firebase-tools
+
+      # - name: Install aapt
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y android-sdk-build-tools
+
+      - name: Get latest app version
+        id: version
+        uses: MakeAndDevelop/firebase-latest-app-version@v1
         with:
-          node-version: 18
-
-      - name: Install Firebase CLI
-        run: |
-          npm install -g firebase-tools
-
-      - name: Install aapt
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y android-sdk-build-tools
-
-      - name: Check Firebase App Version
-        id: check_version
-        env:
-          FIREBASE_TOKEN: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          PROJECT_ID: my-test-85bd0
-          APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-        run: |
-
-
-          # Make API request to get release versions
-          curl -X GET -H "Authorization: Bearer $FIREBASE_TOKEN" "https://firebaseappdistribution.googleapis.com/v1/projects/$PROJECT_ID/apps/$APP_ID/releases"
-
-          # Get the version of the APK you are trying to deploy
-          new_version=$(aapt dump badging app-release.apk | awk -F"'" '/versionName/{print $2}')
-
-          echo "Latest version from Firebase: $latest_version"
-          echo "New version of the APK: $new_version"
-
-          if [ "$latest_version" == "$new_version" ]; then
-            echo "Error: The new app version is the same as the current last app version in Firebase."
-            exit 1
-          fi
-            echo ::set-output name=exit_code::$?
-
-      - name: Deploy
-        if: steps.check_version.outputs.exit_code == 0
-        uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
-        with:
-          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          file: app-release.apk
-          groups: tester
           appId: ${{secrets.FIREBASE_APP_ID}}
+          projectNumber: 177761251370
+          serviceAccount: ${{secrets.CREDENTIAL_FILE_CONTENT}}
+
+      # - name: Deploy
+      #   if: steps.check_version.outputs.exit_code == 0
+      #   uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
+      #   with:
+      #     serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+      #     file: app-release.apk
+      #     groups: tester
+      #     appId: ${{secrets.FIREBASE_APP_ID}}
