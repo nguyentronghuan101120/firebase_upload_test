@@ -44,7 +44,7 @@ jobs:
           latest_version=$(firebase appdistribution:versions:list --format "value(version)" | head -n 1)
 
           # Get the version of the APK you are trying to deploy
-          new_version=$(aapt dump badging build/app/outputs/flutter-apk/app-newdev-release.apk | awk -F"'" '/versionName/{print $2}')
+          new_version=$(aapt dump badging app-release.apk | awk -F"'" '/versionName/{print $2}')
 
           echo "Latest version from Firebase: $latest_version"
           echo "New version of the APK: $new_version"
@@ -53,8 +53,10 @@ jobs:
             echo "Error: The new app version is the same as the current last app version in Firebase."
             exit 1
           fi
+          echo ::set-output name=exit_code::$?
 
       - name: Deploy
+        if: steps.check_version.outputs.exit_code == 0
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
         with:
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
