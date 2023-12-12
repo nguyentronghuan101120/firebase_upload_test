@@ -20,6 +20,16 @@ jobs:
       #   run: |
       #     flutter build apk --flavor newDev -t lib/main.dart
 
+      - name: Install Firebase CLI
+        run: |
+          npm install -g firebase-tools
+
+      - name: Install aapt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y android-sdk-build-tools
+
+
       - name: Check Firebase App Version
         id: check_version
         run: |
