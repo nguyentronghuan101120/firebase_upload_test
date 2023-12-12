@@ -36,13 +36,12 @@ jobs:
 
       - name: Check Firebase App Version
         id: check_version
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          PROJECT_ID: my-test-85bd0
+          APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         run: |
 
-          export FIREBASE_TOKEN=${{ secrets.CREDENTIAL_FILE_CONTENT }}
-
-          # Replace with your project details
-          export PROJECT_ID=my-test-85bd0
-          export APP_ID=${{ secrets.FIREBASE_APP_ID }}
 
           # Make API request to get release versions
           curl -X GET -H "Authorization: Bearer $FIREBASE_TOKEN" "https://firebaseappdistribution.googleapis.com/v1/projects/$PROJECT_ID/apps/$APP_ID/releases"
