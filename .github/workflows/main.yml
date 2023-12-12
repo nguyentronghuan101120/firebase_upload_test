@@ -42,13 +42,25 @@ jobs:
       #     echo "Build newDisplayVersion: ${{ steps.version.outputs.newDisplayVersion }}"
       #     echo "Build newFlutterVersionString: ${{ steps.version.outputs.newFlutterVersionString }}"
 
-      - uses: hkusu/apk-info-action@v1
+      - uses: hkusu/apk-info-action@v1.0.3
         id: apk-info
         with:
           apk-path: "app-release.apk"
-      - name: Show result
-        if: always()
-        run: echo '${{ steps.apk-info.outputs.result }}'
+      - name: Show apk info
+        run: |
+          echo '${{ steps.apk-info.outputs.application-name }}'
+          echo '${{ steps.apk-info.outputs.application-id }}'
+          echo '${{ steps.apk-info.outputs.version-code }}'
+          echo '${{ steps.apk-info.outputs.version-name }}'
+          echo '${{ steps.apk-info.outputs.min-sdk-version }}'
+          echo '${{ steps.apk-info.outputs.target-sdk-version }}'
+          echo '${{ steps.apk-info.outputs.compile-sdk-version }}'
+          echo '${{ steps.apk-info.outputs.uses-permissions }}'
+          echo '${{ steps.apk-info.outputs.debuggable }}'
+          echo '${{ steps.apk-info.outputs.allow-backup }}'
+          echo '${{ steps.apk-info.outputs.supports-rtl }}'
+          echo '${{ steps.apk-info.outputs.file-size }}'
+          echo '${{ steps.apk-info.outputs.readable-file-size }}'
         # - name: Deploy
       #   if: steps.check_version.outputs.exit_code == 0
       #   uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
