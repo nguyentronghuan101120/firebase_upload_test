@@ -37,7 +37,7 @@ jobs:
       - name: Check Firebase App Version
         id: check_version
         env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.YOUR_FIREBASE_SERVICE_ACCOUNT_JSON }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
         run: |
           # Set up Firebase project directory
           mkdir -p $HOME/firebase
