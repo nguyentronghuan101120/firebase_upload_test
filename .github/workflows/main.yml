@@ -36,21 +36,18 @@ jobs:
 
       - name: Check Firebase App Version
         id: check_version
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
         run: |
-          # Store the service account JSON content in a variable
-          service_account_content="${{ secrets.CREDENTIAL_FILE_CONTENT }}"
-
-          # Write the service account JSON content to a file
-          echo "$service_account_content" > service-account.json
-
           # Set the Firebase project using --project and --token options
+          echo "$FIREBASE_SERVICE_ACCOUNT" > service-account.json
           firebase use ${{secrets.FIREBASE_APP_ID}} --token "$(firebase login:ci --no-localhost)"
 
           # Get the latest version from Firebase
           latest_version=$(firebase appdistribution:versions:list --format "value(version)" | head -n 1)
 
           # Get the version of the APK you are trying to deploy
-          new_version=$(aapt dump badging app-release.apk | awk -F"'" '/versionName/{print $2}')
+          new_version=$(aapt dump badging build/app/outputs/flutter-apk/app-newdev-release.apk | awk -F"'" '/versionName/{print $2}')
 
           echo "Latest version from Firebase: $latest_version"
           echo "New version of the APK: $new_version"
@@ -59,7 +56,33 @@ jobs:
             echo "Error: The new app version is the same as the current last app version in Firebase."
             exit 1
           fi
-            echo ::set-output name=exit_code::$?
+
+      # - name: Check Firebase App Version
+      #   id: check_version
+      #   run: |
+      #     # Store the service account JSON content in a variable
+      #     service_account_content="${{ secrets.CREDENTIAL_FILE_CONTENT }}"
+
+      #     # Write the service account JSON content to a file
+      #     echo "$service_account_content" > service-account.json
+
+      #     # Set the Firebase project using --project and --token options
+      #     firebase use ${{secrets.FIREBASE_APP_ID}} --token "$(firebase login:ci --no-localhost)"
+
+      #     # Get the latest version from Firebase
+      #     latest_version=$(firebase appdistribution:versions:list --format "value(version)" | head -n 1)
+
+      #     # Get the version of the APK you are trying to deploy
+      #     new_version=$(aapt dump badging app-release.apk | awk -F"'" '/versionName/{print $2}')
+
+      #     echo "Latest version from Firebase: $latest_version"
+      #     echo "New version of the APK: $new_version"
+
+      #     if [ "$latest_version" == "$new_version" ]; then
+      #       echo "Error: The new app version is the same as the current last app version in Firebase."
+      #       exit 1
+      #     fi
+      #       echo ::set-output name=exit_code::$?
 
       - name: Deploy
         if: steps.check_version.outputs.exit_code == 0
