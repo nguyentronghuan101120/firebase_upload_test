@@ -38,10 +38,14 @@ jobs:
         id: check_version
         run: |
 
-          curl -X GET \
-            -H "Authorization: Bearer $FIREBASE_TOKEN" \
-            "https://firebaseappdistribution.googleapis.com/v1/projects/my-test-85bd0
-            /apps/${{secrets.FIREBASE_APP_ID}}/releases"
+          export FIREBASE_TOKEN=${{ secrets.CREDENTIAL_FILE_CONTENT }}
+
+          # Replace with your project details
+          export PROJECT_ID=my-test-85bd0
+          export APP_ID=${{ secrets.FIREBASE_APP_ID }}
+
+          # Make API request to get release versions
+          curl -X GET -H "Authorization: Bearer $FIREBASE_TOKEN" "https://firebaseappdistribution.googleapis.com/v1/projects/$PROJECT_ID/apps/$APP_ID/releases"
 
           # Get the version of the APK you are trying to deploy
           new_version=$(aapt dump badging app-release.apk | awk -F"'" '/versionName/{print $2}')
