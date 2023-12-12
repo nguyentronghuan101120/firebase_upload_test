@@ -25,22 +25,22 @@ jobs:
         with:
           node-version: 18
 
-      # - name: Get latest app version
-      #   id: version
-      #   uses: nguyentronghuan101120/get_lastest_firebase_app_version_action@master
-      #   with:
-      #     appId: ${{secrets.FIREBASE_APP_ID}}
-      #     projectNumber: ${{secrets.PROJECT_NUMBER}}
-      #     serviceAccount: ${{secrets.CREDENTIAL_FILE_CONTENT}}
+      - name: Get Firebase latest app version
+        id: version
+        uses: nguyentronghuan101120/get_lastest_firebase_app_version_action@master
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          projectNumber: ${{secrets.PROJECT_NUMBER}}
+          serviceAccount: ${{secrets.CREDENTIAL_FILE_CONTENT}}
 
-      # - name: Show current version
-      #   run: |
-      #     echo "Build version: ${{ steps.version.outputs.buildVersion }}"
-      #     echo "Build displayVersion: ${{ steps.version.outputs.displayVersion }}"
-      #     echo "Build flutterVersionString: ${{ steps.version.outputs.flutterVersionString }}"
-      #     echo "Build newBuildVersion: ${{ steps.version.outputs.newBuildVersion }}"
-      #     echo "Build newDisplayVersion: ${{ steps.version.outputs.newDisplayVersion }}"
-      #     echo "Build newFlutterVersionString: ${{ steps.version.outputs.newFlutterVersionString }}"
+      - name: Show current Firebase lastest app version
+        run: |
+          echo "Build version: ${{ steps.version.outputs.buildVersion }}"
+          echo "Build displayVersion: ${{ steps.version.outputs.displayVersion }}"
+          echo "Build flutterVersionString: ${{ steps.version.outputs.flutterVersionString }}"
+          echo "Build newBuildVersion: ${{ steps.version.outputs.newBuildVersion }}"
+          echo "Build newDisplayVersion: ${{ steps.version.outputs.newDisplayVersion }}"
+          echo "Build newFlutterVersionString: ${{ steps.version.outputs.newFlutterVersionString }}"
 
       - uses: hkusu/apk-info-action@v1.0.3
         id: apk-info
