@@ -51,6 +51,15 @@ jobs:
           echo "Build newDisplayVersion: ${{ steps.version.outputs.newDisplayVersion }}"
           echo "Build newFlutterVersionString: ${{ steps.version.outputs.newFlutterVersionString }}"
 
+      - name: Save version information to file
+        run: echo "${{ steps.version.outputs.current_version }}" > version.txt
+
+      - name: Upload version information as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: version-info
+          path: version.txt
+
         # - name: Deploy
       #   if: steps.check_version.outputs.exit_code == 0
       #   uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
