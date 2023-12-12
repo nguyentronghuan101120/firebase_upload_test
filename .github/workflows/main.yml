@@ -37,12 +37,11 @@ jobs:
       - name: Check Firebase App Version
         id: check_version
         run: |
-        
-          # # Set the Firebase project using --project and --token options
-          # firebase use ${{secrets.FIREBASE_APP_ID}} --token "$(firebase login:ci --no-localhost)"
 
-          # Get the latest version from Firebase
-          latest_version=$(firebase appdistribution:versions:list --format "value(version)" | head -n 1)
+          curl -X GET \
+            -H "Authorization: Bearer $FIREBASE_TOKEN" \
+            "https://firebaseappdistribution.googleapis.com/v1/projects/my-test-85bd0
+            /apps/${{secrets.FIREBASE_APP_ID}}/releases"
 
           # Get the version of the APK you are trying to deploy
           new_version=$(aapt dump badging app-release.apk | awk -F"'" '/versionName/{print $2}')
