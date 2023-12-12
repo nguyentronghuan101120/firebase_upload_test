@@ -134,6 +134,7 @@ jobs:
           cd $HOME/firebase
           echo "$FIREBASE_SERVICE_ACCOUNT" > service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase/service-account.json
+          cat service-account.json
 
       - name: Check Firebase App Version
         id: check_version
