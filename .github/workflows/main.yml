@@ -37,7 +37,7 @@ jobs:
       - name: Check Firebase App Version
         id: check_version
         env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          FIREBASE_TOKEN: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           PROJECT_ID: my-test-85bd0
           APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         run: |
