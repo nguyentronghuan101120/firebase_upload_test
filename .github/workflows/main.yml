@@ -27,6 +27,7 @@ jobs:
 
       - name: Install Node.js dependencies
         run: npm install
+        working-directory: ./.github/workflows/firebase_app_check
 
       - name: Get and Firebase latest app version
         id: firebaseAppVersion
