@@ -37,12 +37,7 @@ jobs:
       - name: Check Firebase App Version
         id: check_version
         run: |
-          # Store the service account JSON content in a variable
-          service_account_content="${{ secrets.CREDENTIAL_FILE_CONTENT }}"
-
-          # Write the service account JSON content to a file
-          echo "$service_account_content" > service-account.json
-
+        
           # Set the Firebase project using --project and --token options
           firebase use ${{secrets.FIREBASE_APP_ID}} --token "$(firebase login:ci --no-localhost)"
 
