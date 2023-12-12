@@ -51,7 +51,7 @@ jobs:
           latest_version=$(firebase appdistribution:versions:list --format "value(version)" | head -n 1)
 
           # Get the version of the APK you are trying to deploy
-          new_version=$(aapt dump badging build/app/outputs/flutter-apk/app-newdev-release.apk | awk -F"'" '/versionName/{print $2}')
+          new_version=$(aapt dump badging app-release.apk | awk -F"'" '/versionName/{print $2}')
 
           echo "Latest version from Firebase: $latest_version"
           echo "New version of the APK: $new_version"
