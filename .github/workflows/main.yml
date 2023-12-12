@@ -20,6 +20,11 @@ jobs:
       #   run: |
       #     flutter build apk --flavor newDev -t lib/main.dart
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
       - name: Install Firebase CLI
         run: |
           npm install -g firebase-tools
@@ -29,15 +34,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y android-sdk-build-tools
 
-
       - name: Check Firebase App Version
         id: check_version
         run: |
           # Get the latest version from Firebase
           latest_version=$(firebase appdistribution:versions:list --app ${{secrets.FIREBASE_APP_ID}} --token "$FIREBASE_TOKEN" --format "value(version)" | head -n 1)
-        
+
           # Get the version of the APK you are trying to deploy
-          new_version=$(aapt dump badging build/app/outputs/flutter-apk/app-newdev-release.apk | awk -F"'" '/versionName/{print $2}')
+          new_version=$(aapt dump badging app-release.apk | awk -F"'" '/versionName/{print $2}')
 
           echo "Latest version from Firebase: $latest_version"
           echo "New version of the APK: $new_version"
@@ -47,10 +51,6 @@ jobs:
           exit 1
           fi
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
       - name: Deploy
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
         with:
