@@ -15,11 +15,15 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-      - run: |
-          flutter pub get
+      - run: flutter pub get
       - name: Build
-        run: |
-          flutter build apk --release
+        run: flutter build apk --release
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
 
   Deploy:
     name: Deploy
@@ -45,6 +49,12 @@ jobs:
           projectNumber: ${{secrets.PROJECT_NUMBER}}
           serviceAccount: ${{secrets.CREDENTIAL_FILE_CONTENT}}
 
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: app-release
+          path: build/app/outputs/flutter-apk/
+
       - name: Show apk info
         uses: hkusu/apk-info-action@v1.0.3
         id: currentAppVersion
@@ -59,6 +69,7 @@ jobs:
           else
             echo "Versions are the same. Proceeding with the build."
           fi
+
       - name: Deploy
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
         with:
