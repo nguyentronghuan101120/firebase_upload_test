@@ -19,7 +19,7 @@ jobs:
           flutter pub get
       - name: Build
         run: |
-          flutter build apk release
+          flutter build apk --release
 
   Deploy:
     name: Deploy
