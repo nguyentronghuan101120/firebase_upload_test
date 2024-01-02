@@ -97,7 +97,8 @@ jobs:
       - name: Setup Fastlane
         working-directory: ./android
         run: |
-          # bundle install
+          bundle install
+          fastlane add_plugin firebase_app_distribution
           fastlane distribution
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
