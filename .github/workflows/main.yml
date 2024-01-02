@@ -91,6 +91,8 @@ jobs:
 
       - name: Set up ruby
         uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.0
 
       - name: Setup Fastlane
         working-directory: ./android
