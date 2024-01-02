@@ -88,19 +88,8 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.3.0
-
-      - name: Install bundler and dependencies
-        working-directory: ${{ github.workspace }}/android
-        run: |
-          gem install bundler
-          bundle install
       - run: |
           cd android
-          fastlane add_plugin firebase_app_distribution
           fastlane distribution
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
