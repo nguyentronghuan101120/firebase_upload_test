@@ -85,6 +85,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
       - run: |
           cd android
           fastlane distribution
