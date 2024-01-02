@@ -88,8 +88,14 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-      - run: |
-          cd android
+
+      - name: Set up ruby
+        uses: ruby/setup-ruby@v1
+
+      - name: Setup Fastlane
+        working-directory: ./android
+        run: |
+          bundle install
           fastlane distribution
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
