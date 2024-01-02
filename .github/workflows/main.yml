@@ -97,8 +97,7 @@ jobs:
       - name: Setup Fastlane
         working-directory: ./android
         run: |
-          bundle clean --force
-          bundle install
+          # bundle install
           fastlane distribution
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
