@@ -97,6 +97,7 @@ jobs:
       - name: Setup Fastlane
         working-directory: ./android
         run: |
+          bundle clean --force
           bundle install
           fastlane distribution
         env:
