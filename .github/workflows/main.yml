@@ -94,9 +94,9 @@ jobs:
           ruby-version: 3.3.0
 
       - name: Install bundler and dependencies
+        working-directory: ${{ github.workspace }}/android
         run: |
           gem install bundler
-          cd android/fastlane
           bundle install
       - run: |
           cd android
