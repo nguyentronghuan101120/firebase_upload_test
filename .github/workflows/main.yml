@@ -85,11 +85,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - run: fastlane distribution
-      - name: Deploy iOS Beta to TestFlight via Fastlane
-        uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: distribution
-          subdirectory: android
+      - run: |
+          cd android
+          fastlane distribution
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
