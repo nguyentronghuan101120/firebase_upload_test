@@ -5,75 +5,86 @@ on:
     branches:
       - "*"
 
+# jobs:
+#   Build:
+#     name: Build
+#     runs-on: ubuntu-latest
+#     steps:
+#       # - name: Checkout repository
+#       #   uses: actions/checkout@v4
+#       - uses: subosito/flutter-action@v2
+#         with:
+#           channel: "stable"
+#       - run: flutter pub get
+#       - name: Build
+#         run: flutter build apk --release
+
+#       - name: Upload build artifacts
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: app-release
+#           path: build/app/outputs/flutter-apk/app-release.apk
+
+#   Deploy:
+#     name: Deploy
+#     runs-on: ubuntu-latest
+#     needs: Build
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 18
+
+#       - name: Install Node.js dependencies
+#         run: npm install
+#         working-directory: ./.github/workflows/firebase_app_check
+
+#       - name: Get and Firebase latest app version
+#         id: firebaseAppVersion
+#         uses: ./.github/workflows/firebase_app_check
+#         with:
+#           appId: ${{secrets.FIREBASE_APP_ID}}
+#           projectNumber: ${{secrets.PROJECT_NUMBER}}
+#           serviceAccount: ${{secrets.CREDENTIAL_FILE_CONTENT}}
+
+#       - name: Download build artifacts
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: app-release
+#           path: build/app/outputs/flutter-apk/
+
+#       - name: Show apk info
+#         uses: hkusu/apk-info-action@v1.0.3
+#         id: currentAppVersion
+#         with:
+#           apk-path: "build/app/outputs/flutter-apk/app-release.apk"
+
+#       - name: Check if versions are the same
+#         run: |
+#           if [ "${{ steps.firebaseAppVersion.outputs.flutterVersionString }}" == "${{ steps.currentAppVersion.outputs.version-name }}+${{ steps.currentAppVersion.outputs.version-code }}" ]; then
+#             echo "You must increase your app version!"
+#             exit 1
+#           else
+#             echo "Versions are the same. Proceeding with the build."
+#           fi
+
+#       - name: Deploy
+#         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
+#         with:
+#           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+#           file: build/app/outputs/flutter-apk/app-newdev-release.apk
+#           groups: mula-testers
+#           appId: ${{secrets.FIREBASE_APP_ID}}
+
 jobs:
   Build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      # - name: Checkout repository
-      #   uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-      - run: flutter pub get
-      - name: Build
-        run: flutter build apk --release
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
-
-  Deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-    needs: Build
-    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install Node.js dependencies
-        run: npm install
-        working-directory: ./.github/workflows/firebase_app_check
-
-      - name: Get and Firebase latest app version
-        id: firebaseAppVersion
-        uses: ./.github/workflows/firebase_app_check
-        with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          projectNumber: ${{secrets.PROJECT_NUMBER}}
-          serviceAccount: ${{secrets.CREDENTIAL_FILE_CONTENT}}
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: app-release
-          path: build/app/outputs/flutter-apk/
-
-      - name: Show apk info
-        uses: hkusu/apk-info-action@v1.0.3
-        id: currentAppVersion
-        with:
-          apk-path: "build/app/outputs/flutter-apk/app-release.apk"
-
-      - name: Check if versions are the same
-        run: |
-          if [ "${{ steps.firebaseAppVersion.outputs.flutterVersionString }}" == "${{ steps.currentAppVersion.outputs.version-name }}+${{ steps.currentAppVersion.outputs.version-code }}" ]; then
-            echo "You must increase your app version!"
-            exit 1
-          else
-            echo "Versions are the same. Proceeding with the build."
-          fi
-
-      - name: Deploy
-        uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
-        with:
-          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          file: build/app/outputs/flutter-apk/app-newdev-release.apk
-          groups: mula-testers
-          appId: ${{secrets.FIREBASE_APP_ID}}
+      - run: fastlane distribution
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
