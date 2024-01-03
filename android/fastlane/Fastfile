@@ -22,7 +22,7 @@ platform :android do
     firebase_app_distribution(
           app: "1:177761251370:android:652e9c80f7202247999353",
           firebase_cli_path: "/usr/local/bin/firebase",
-          apk_path: "app-release.apk",
+          apk_path: "../android/fastlane/app-release.apk",
           firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA"
           )
 
