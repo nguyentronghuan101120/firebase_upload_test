@@ -26,11 +26,7 @@ platform :android do
           firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA"
           )
 
-    latest_release = firebase_app_distribution_get_latest_release(
-      app: "1:177761251370:android:652e9c80f7202247999353"
-      firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA"
-    )
-    increment_build_number({ build_number: latest_release[:buildVersion].to_i + 1 })
+    increment_version_code(version_code: latest_app_distribution_version_code + 1)
   end
 
   
