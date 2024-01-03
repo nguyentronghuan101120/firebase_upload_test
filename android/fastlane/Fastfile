@@ -18,7 +18,7 @@ default_platform(:android)
 platform :android do
   desc "New Build to App Distribution Beta"
   lane :distribution do
-    sh("flutter build apk --release")
+    # sh("flutter build apk --release")
     firebase_app_distribution(
           app: "1:177761251370:android:652e9c80f7202247999353",
           firebase_cli_path: "/usr/local/bin/firebase",
