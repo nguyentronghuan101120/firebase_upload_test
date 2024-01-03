@@ -31,7 +31,7 @@ platform :android do
             firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA",
             debug: true
           )
-          UI.message("Latest Firebase App Distribution version number: #{latest_version}")
+          UI.message("Latest Firebase App Distribution version number: #{latest_release}")
   end
 
   
