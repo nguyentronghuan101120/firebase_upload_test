@@ -49,11 +49,19 @@ jobs:
 
       - name: Check if versions are the same
         run: |
-          if [ "${{ steps.firebaseAppVersion.outputs.flutterVersionString }}" == "${{ steps.currentAppVersion.outputs.version-name }}+${{ steps.currentAppVersion.outputs.version-code }}" ]; then
-            echo "You must increase your app version!"
+          current_version="${{ steps.currentAppVersion.outputs.version-name }}+${{ steps.currentAppVersion.outputs.version-code }}"
+          build_version="${{ steps.firebaseAppVersion.outputs.flutterVersionString }}"
+
+          # Extract the numeric parts of the version strings
+          current_version_number=$(echo "$current_version" | sed 's/[^0-9]*//g')
+          build_version_number=$(echo "$build_version" | sed 's/[^0-9]*//g')
+
+          # Check if current version is less than or equal to build version
+          if [ "$current_version_number" -le "$build_version_number" ]; then
+            echo "Error: Current app version must be greater than build version!"
             exit 1
           else
-            echo "Versions are the same. Proceeding with the build."
+            echo "Versions are valid. Proceeding with the build."
           fi
       # - name: Deploy
       #   uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
@@ -62,6 +70,7 @@ jobs:
       #     file: build/app/outputs/flutter-apk/app-newdev-release.apk
       #     groups: mula-testers
       #     appId: ${{secrets.FIREBASE_APP_ID}}
+
 # jobs:
 #   Build:
 #     name: Build
