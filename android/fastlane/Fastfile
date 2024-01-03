@@ -38,7 +38,9 @@ platform :android do
     # sh("flutter build apk --release")
 
     # Get the current version of the app
-    current_version = get_version_name
+    current_version = get_apk_version(apk_path: "app-release.apk")
+
+    puts "current version: #{current_version}"
 
     # Get the latest version from Firebase
     latest_version = firebase_app_distribution_get_latest_version(
@@ -61,15 +63,15 @@ platform :android do
     end
   end
 
-  private_lane :get_version_name do
-    version_name = sh("grep -o 'versionName.*=.*\".*\"' app/build.gradle | sed 's/.*\"\\(.*\\)\".*/\\1/'", log: false).chomp
+  private_lane :get_apk_version do |options|
+    apk_path = options[:apk_path]
+    version_name = sh("aapt dump badging #{apk_path} | grep versionName | sed \"s/.*versionName='\\([^']*\\)'.*/\\1/\"", log: false).chomp
     UI.message("Current app version: #{version_name}")
     version_name
   end
 
   private_lane :firebase_app_distribution_get_latest_version do |options|
     app = options[:app]
-    firebase_cli_path = options[:firebase_cli_path]
     firebase_cli_token = options[:firebase_cli_token]
 
     command = "#{firebase_cli_path} appdistribution releases list --app #{app} --token #{firebase_cli_token} --limit 1"
