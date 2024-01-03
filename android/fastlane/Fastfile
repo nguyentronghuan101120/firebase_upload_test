@@ -43,7 +43,7 @@ platform :android do
     # Get the latest version from Firebase
     latest_version = firebase_app_distribution_get_latest_version(
       app: "1:177761251370:android:652e9c80f7202247999353",
-      firebase_cli_path: "/usr/local/bin/firebase",
+      # firebase_cli_path: "/usr/local/bin/firebase",
       firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA"
     )
 
