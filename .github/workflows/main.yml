@@ -85,9 +85,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
+      # - uses: subosito/flutter-action@v2
+      #   with:
+      #     channel: "stable"
 
       - name: Set up ruby
         uses: ruby/setup-ruby@v1

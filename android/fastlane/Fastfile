@@ -26,8 +26,12 @@ platform :android do
           firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA"
           )
 
-          latest_version = sh('firebase appdistribution:releases:list --app=1:177761251370:android:652e9c80f7202247999353 --token=Y1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA --format=json | jq -r ".[0].versionCode"')
-    UI.message("Latest Firebase App Distribution version number: #{latest_version}")
+          latest_release = firebase_app_distribution_get_latest_release(
+            app: "1:177761251370:android:652e9c80f7202247999353",
+            firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA",
+            debug: true
+          )
+          UI.message("Latest Firebase App Distribution version number: #{latest_version}")
   end
 
   
