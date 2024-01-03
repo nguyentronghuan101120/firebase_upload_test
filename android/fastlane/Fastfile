@@ -22,11 +22,11 @@ platform :android do
     firebase_app_distribution(
           app: "1:177761251370:android:652e9c80f7202247999353",
           firebase_cli_path: "/usr/local/bin/firebase",
-          apk_path: "../build/app/outputs/apk/release/app-release.apk",
+          apk_path: "app-release.apk",
           firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA"
           )
 
-    increment_version_code(version_code: latest_app_distribution_version_code + 1)
+    firebase_app_distribution_get_latest_release(app: "1:177761251370:android:652e9c80f7202247999353",firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA",)
   end
 
   
