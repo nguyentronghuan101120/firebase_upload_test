@@ -26,7 +26,7 @@ platform :android do
 
     # increment_version_code({ version_code: latest_release[:buildVersion].to_i + 1 })
     latest_apk_path = lane_context[SharedValues::FIREBASE_APP_DISTRO_LATEST_RELEASE]
-    puts "Data ok: ${latest_apk_path}"
+    puts "Data ok: #{latest_apk_path}"
     version_code = get_version_code(apk_path: "../android/fastlane/app-release.apk")
     increment_version_code(version_code: version_code.to_i + 1)
     firebase_app_distribution(
