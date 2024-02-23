@@ -1,83 +1,28 @@
-# # This file contains the fastlane.tools configuration
-# # You can find the documentation at https://docs.fastlane.tools
-# #
-# # For a list of all available actions, check out
-# #
-# #     https://docs.fastlane.tools/actions
-# #
-# # For a list of all available plugins, check out
-# #
-# #     https://docs.fastlane.tools/plugins/available-plugins
-# #
-
-# # Uncomment the line if you want fastlane to automatically update itself
-# # update_fastlane
-
-# default_platform(:android)
-
-# platform :android do
-#   desc "New Build to App Distribution Beta"
-#   lane :distribution do
-#     # sh("flutter build apk --release")
-#     firebase_app_distribution(
-#           app: "1:177761251370:android:652e9c80f7202247999353",
-#           firebase_cli_path: "/usr/local/bin/firebase",
-#           apk_path: "../android/fastlane/app-release.apk",
-#           firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA"
-#           )
-#   end
-
-  
-# end
-
 default_platform(:android)
 
 platform :android do
-  desc "New Build to App Distribution Beta"
+  desc "Build android app to Firebase distribution"
   lane :distribution do
-    # sh("flutter build apk --release")
+    latest_release = firebase_app_distribution_get_latest_release(
+      app: ENV["FIREBASE_APP_ID"],
+      firebase_cli_token: ENV["CREDENTIAL_FILE_CONTENT"],
+      debug:true
+    )
+    new_version_code = latest_release[:buildVersion].to_i + 1
 
-    # Get the current version of the app
-    current_version = get_apk_version(apk_path: "app-release.apk")
-
-    puts "current version: #{current_version}"
-
-    # Get the latest version from Firebase
-    latest_version = firebase_app_distribution_get_latest_version(
-      app: "1:177761251370:android:652e9c80f7202247999353",
-      # firebase_cli_path: "/usr/local/bin/firebase",
-      firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA"
+    # Update version code
+    increment_version_code(
+      gradle_file_path: "app/build.gradle",
+      version_code: new_version_code
     )
 
-    # Compare versions
-    if Gem::Version.new(current_version) >= Gem::Version.new(latest_version)
-      UI.user_error!("Current app version is not greater than the latest version in Firebase. Aborting distribution.")
-    else
-      # Proceed with distribution
-      firebase_app_distribution(
-        app: "1:177761251370:android:652e9c80f7202247999353",
-        firebase_cli_path: "/usr/local/bin/firebase",
-        apk_path: "../android/fastlane/app-release.apk",
-        firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA"
-      )
-    end
-  end
+    sh "flutter build apk --flavor newDev -t lib/main.dart"
 
-  private_lane :get_apk_version do |options|
-    apk_path = options[:apk_path]
-    version_name = sh("aapt dump badging #{apk_path} | grep versionName | sed \"s/.*versionName='\\([^']*\\)'.*/\\1/\"", log: false).chomp
-    UI.message("Current app version: #{version_name}")
-    version_name
-  end
-
-  private_lane :firebase_app_distribution_get_latest_version do |options|
-    app = options[:app]
-    firebase_cli_token = options[:firebase_cli_token]
-
-    command = "#{firebase_cli_path} appdistribution releases list --app #{app} --token #{firebase_cli_token} --limit 1"
-    latest_version = sh(command, log: false).strip
-
-    UI.message("Latest version in Firebase: #{latest_version}")
-    latest_version
-  end
+    # Distribute the new build
+    firebase_app_distribution(
+      app: ENV["FIREBASE_APP_ID"],
+      apk_path: "../build/app/outputs/flutter-apk/app-newdev-release.apk",
+      firebase_cli_token: ENV["CREDENTIAL_FILE_CONTENT"]
+    )
+  end  
 end

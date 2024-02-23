@@ -1,9 +1,10 @@
-name: CI/CD
+name: ANDROID BUILD AND DEPLOY TO FIREBASE DISTRIBUTION
 
 on:
-  push:
-    branches:
-      - "*"
+  # push:
+  #   branches:
+  #     - "master"
+  workflow_dispatch:
 
 jobs:
   Build:
@@ -12,86 +13,35 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      # - uses: subosito/flutter-action@v2
-      #   with:
-      #     channel: "stable"
-      # - run: |
-      #     flutter clean .
-      #     flutter pub get
-      #     flutter pub run build_runner build --delete-conflicting-outputs
-      #     flutter pub run easy_localization:generate -f keys -S assets/translations -O lib/gen
-      # - name: Build
-      #   run: |
-      #     flutter build apk --flavor newDev -t lib/main.dart
+
+      - name: Set up ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install Node.js dependencies
-        run: npm install
-        working-directory: ./.github/workflows/firebase_app_check
-
-      - name: Get and Firebase latest app version
-        id: firebaseAppVersion
-        uses: ./.github/workflows/firebase_app_check
+      - uses: subosito/flutter-action@v2
         with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          projectNumber: ${{secrets.PROJECT_NUMBER}}
-          serviceAccount: ${{secrets.CREDENTIAL_FILE_CONTENT}}
+          channel: "stable"
+      - run: |
+          flutter clean .
+          flutter pub get
+          flutter pub run build_runner build --delete-conflicting-outputs
+          flutter pub run easy_localization:generate -f keys -S assets/translations -O lib/gen
 
-      - name: Show apk info
-        uses: hkusu/apk-info-action@v1.0.3
-        id: currentAppVersion
-        with:
-          apk-path: "app-release.apk"
-
-      - name: Check if versions are the same
+      - name: Setup Fastlane and deploy
+        working-directory: ./android
+        env:
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          CREDENTIAL_FILE_CONTENT: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
         run: |
-          current_version="${{ steps.currentAppVersion.outputs.version-name }}+${{ steps.currentAppVersion.outputs.version-code }}"
-          build_version="${{ steps.firebaseAppVersion.outputs.flutterVersionString }}"
+          bundle install
+          fastlane add_plugin firebase_app_distribution
+          fastlane add_plugin increment_version_code
+          fastlane distribution
 
-          # Extract the numeric parts of the version strings
-          current_version_number=$(echo "$current_version" | sed 's/[^0-9]*//g')
-          build_version_number=$(echo "$build_version" | sed 's/[^0-9]*//g')
-
-          # Check if current version is less than or equal to build version
-          if [ "$current_version_number" -le "$build_version_number" ]; then
-            echo "Error: Current app version must be greater than build version!"
-            exit 1
-          else
-            echo "Versions are valid. Proceeding with the build."
-          fi
-      # - name: Deploy
-      #   uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
-      #   with:
-      #     serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-      #     file: build/app/outputs/flutter-apk/app-newdev-release.apk
-      #     groups: mula-testers
-      #     appId: ${{secrets.FIREBASE_APP_ID}}
-
-# jobs:
-#   Build:
-#     name: Build
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
-#       - uses: subosito/flutter-action@v2
-#         with:
-#           channel: "stable"
-
-#       - name: Set up ruby
-#         uses: ruby/setup-ruby@v1
-#         with:
-#           ruby-version: 3.3.0
-
-#       - name: Setup Fastlane
-#         working-directory: ./android
-#         run: |
-#           bundle install
-#           fastlane add_plugin firebase_app_distribution
-#           fastlane distribution
-#         env:
-#           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+            
