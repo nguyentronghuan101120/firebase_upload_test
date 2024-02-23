@@ -6,7 +6,7 @@ platform :android do
     
     latest_release = firebase_app_distribution_get_latest_release(
       app: ENV["FIREBASE_APP_ID"],
-      firebase_cli_token: ENV["CREDENTIAL_FILE_CONTENT"],
+      firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA",
       debug:true
     )
     new_version_code = latest_release[:buildVersion].to_i + 1
@@ -23,7 +23,7 @@ platform :android do
     firebase_app_distribution(
       app: ENV["FIREBASE_APP_ID"],
       apk_path: "../android/fastlane/app-release.apk",
-      firebase_cli_token: "1//0esQ6rMbovSUUCgYIARAAGA4SNwF-L9Ir4JMTJUEH7TxuZ78A6ohqP6RWHmbhlKR4sYTfi66b6JjMnBh3Wqyg5TpxICJd16p4xYA"
+      firebase_cli_token: ENV["CREDENTIAL_FILE_CONTENT"]
     )
   end  
 end
