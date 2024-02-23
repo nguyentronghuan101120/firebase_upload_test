@@ -1,9 +1,9 @@
 name: ANDROID BUILD AND DEPLOY TO FIREBASE DISTRIBUTION
 
 on:
-  # push:
-  #   branches:
-  #     - "master"
+  push:
+    branches:
+      - "*"
   workflow_dispatch:
 
 jobs:
