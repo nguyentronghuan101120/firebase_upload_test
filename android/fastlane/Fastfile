@@ -16,12 +16,12 @@ platform :android do
       version_code: new_version_code
     )
 
-    sh "flutter build apk --flavor newDev -t lib/main.dart"
+    # sh "flutter build apk --flavor newDev -t lib/main.dart"
 
     # Distribute the new build
     firebase_app_distribution(
       app: ENV["FIREBASE_APP_ID"],
-      apk_path: "../build/app/outputs/flutter-apk/app-newdev-release.apk",
+      apk_path: "../android/fastlane/app-release.apk",
       firebase_cli_token: ENV["CREDENTIAL_FILE_CONTENT"]
     )
   end  
